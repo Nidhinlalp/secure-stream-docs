@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:secure_stream_docs/core/ui/themes/app_colors.dart';
+import 'package:secure_stream_docs/core/ui/themes/app_sizes.dart';
+import 'package:secure_stream_docs/core/ui/themes/app_text_theme.dart';
 import 'package:secure_stream_docs/features/documents/domain/entities/document.dart';
 import 'package:secure_stream_docs/features/documents/presentation/logic/document/documents_bloc.dart';
 
@@ -74,7 +78,7 @@ class DownloadProgressDialog extends StatelessWidget {
 
             return AlertDialog(
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(AppSizses.l.sp),
               ),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -85,23 +89,23 @@ class DownloadProgressDialog extends StatelessWidget {
                     duration: const Duration(milliseconds: 300),
                     builder: (context, value, _) {
                       return SizedBox(
-                        width: 64,
-                        height: 64,
+                        width: AppSizses.xxl.sp,
+                        height: AppSizses.xxl.sp,
                         child: Stack(
                           alignment: Alignment.center,
                           children: [
                             CircularProgressIndicator(
                               value: isDownloading ? value : null,
-                              strokeWidth: 4,
-                              color: Theme.of(context).primaryColor,
+                              strokeWidth: AppSizses.xs.sp,
+                              color: AppColors.primary,
                               backgroundColor: Theme.of(
                                 context,
                               ).colorScheme.surfaceContainerHighest,
                             ),
                             Icon(
                               Icons.download_rounded,
-                              size: 28,
-                              color: Theme.of(context).primaryColor,
+                              size: AppSizses.l3.sp,
+                              color: AppColors.primary,
                             ),
                           ],
                         ),
@@ -109,12 +113,12 @@ class DownloadProgressDialog extends StatelessWidget {
                     },
                   ),
 
-                  const SizedBox(height: 20),
+                  AppSizses.height(AppSizses.l1),
 
                   // Document name
                   Text(
                     documentName,
-                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                    style: AppTextStyle.titleSmall(context)?.copyWith(
                       fontWeight: FontWeight.w600,
                     ),
                     textAlign: TextAlign.center,
@@ -122,38 +126,38 @@ class DownloadProgressDialog extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
 
-                  const SizedBox(height: 16),
+                  AppSizses.height(AppSizses.l),
 
                   // Progress bar
                   ClipRRect(
-                    borderRadius: BorderRadius.circular(4),
+                    borderRadius: BorderRadius.circular(AppSizses.xs.sp),
                     child: TweenAnimationBuilder<double>(
                       tween: Tween(begin: 0, end: progress),
                       duration: const Duration(milliseconds: 300),
                       builder: (context, value, _) {
                         return LinearProgressIndicator(
                           value: isDownloading ? value : null,
-                          minHeight: 6,
+                          minHeight: AppSizses.xs1.sp,
                           backgroundColor: Theme.of(
                             context,
                           ).colorScheme.surfaceContainerHighest,
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                            Theme.of(context).primaryColor,
+                          valueColor: const AlwaysStoppedAnimation<Color>(
+                            AppColors.primary,
                           ),
                         );
                       },
                     ),
                   ),
 
-                  const SizedBox(height: 12),
+                  AppSizses.height(AppSizses.m),
 
                   // Percentage text
                   Text(
                     isDownloading
                         ? 'Downloading… ${(progress * 100).toInt()}%'
                         : 'Preparing…',
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Colors.grey.shade600,
+                    style: AppTextStyle.bodySmall(context)?.copyWith(
+                      color: AppColors.textSecondary(context),
                     ),
                   ),
                 ],

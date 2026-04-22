@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import 'package:secure_stream_docs/core/ui/themes/app_sizes.dart';
 
 class HighlightToolbar extends StatelessWidget {
   final VoidCallback onHighlight;
@@ -13,13 +16,16 @@ class HighlightToolbar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      padding: EdgeInsets.symmetric(
+        horizontal: AppSizses.l.sp,
+        vertical: AppSizses.s1.sp,
+      ),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.12),
-            blurRadius: 6,
+            blurRadius: AppSizses.xs1,
             offset: const Offset(0, -2),
           ),
         ],
@@ -28,18 +34,18 @@ class HighlightToolbar extends StatelessWidget {
         top: false,
         child: Row(
           children: [
-            const Icon(Icons.text_fields, size: 18),
-            const SizedBox(width: 8),
+            Icon(Icons.text_fields, size: AppSizses.l3.sp),
+            AppSizses.width(AppSizses.s),
             const Expanded(child: Text('Text selected')),
             TextButton.icon(
               onPressed: onCancel,
-              icon: const Icon(Icons.close, size: 18),
+              icon: Icon(Icons.close, size: AppSizses.l3.sp),
               label: const Text('Cancel'),
             ),
-            const SizedBox(width: 8),
+            AppSizses.width(AppSizses.s),
             FilledButton.icon(
               onPressed: onHighlight,
-              icon: const Icon(Icons.highlight, size: 18),
+              icon: Icon(Icons.highlight, size: AppSizses.l3.sp),
               label: const Text('Highlight'),
             ),
           ],

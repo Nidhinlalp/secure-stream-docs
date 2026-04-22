@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import 'package:secure_stream_docs/core/ui/themes/app_colors.dart';
+import 'package:secure_stream_docs/core/ui/themes/app_sizes.dart';
+import 'package:secure_stream_docs/core/ui/themes/app_text_theme.dart';
 
 class EmptyState extends StatelessWidget {
   const EmptyState({super.key});
@@ -7,32 +12,28 @@ class EmptyState extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(32),
+        padding: EdgeInsets.all(AppSizses.xl.sp),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
               Icons.folder_open,
-              size: 64,
-              color: Theme.of(context).iconTheme.color?.withValues(alpha: 0.5),
+              size: AppSizses.xxl.sp,
+              color: AppColors.textSecondary(context).withValues(alpha: 0.5),
             ),
-            const SizedBox(height: 16),
+            AppSizses.height(AppSizses.l),
             Text(
               'No documents available',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                color: Theme.of(
-                  context,
-                ).textTheme.titleLarge?.color?.withValues(alpha: 0.7),
+              style: AppTextStyle.titleLarge(context)?.copyWith(
+                color: AppColors.textSecondary(context),
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 8),
+            AppSizses.height(AppSizses.s),
             Text(
               'Download documents to get started',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(
-                  context,
-                ).textTheme.bodyMedium?.color?.withValues(alpha: 0.6),
+              style: AppTextStyle.bodyMedium(context)?.copyWith(
+                color: AppColors.textSecondary(context).withValues(alpha: 0.7),
               ),
               textAlign: TextAlign.center,
             ),

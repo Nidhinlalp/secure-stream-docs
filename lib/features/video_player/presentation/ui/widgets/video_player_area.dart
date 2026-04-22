@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:secure_stream_docs/core/ui/themes/app_sizes.dart';
 import 'package:secure_stream_docs/core/utils/constants/app_constants.dart';
 import 'package:secure_stream_docs/features/video_player/presentation/logic/bloc/video_player_bloc.dart';
 import 'package:secure_stream_docs/features/video_player/presentation/utils/video_error_mapper.dart';
@@ -12,7 +10,6 @@ import 'video_loading_placeholder.dart';
 import 'video_initial_placeholder.dart';
 import 'video_empty_details.dart';
 
-/// Area that switches based on the Bloc State
 class VideoPlayerArea extends StatelessWidget {
   final VideoPlayerState state;
 
@@ -41,15 +38,12 @@ class VideoPlayerArea extends StatelessWidget {
         ],
       ),
 
-      // Ready — the real player + details
+      // Ready — the real player + details section
       VideoPlayerReady(:final video, :final positionMs) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           VideoPlayerView(video: video, initialPositionMs: positionMs),
-          Padding(
-            padding: EdgeInsets.only(top: AppSizses.m.sp),
-            child: VideoDetailsSection(video: video),
-          ),
+          const VideoDetailsSection(),
         ],
       ),
 

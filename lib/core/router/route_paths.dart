@@ -7,7 +7,4 @@ class RoutePaths {
   static const String documents = '/docs';
   static const String documentDetails = '/docs/:documentId';
   static const String highlights = '/docs/:documentId/highlights';
-
-  static const String downloads = '/downloads';
-  static const String settings = '/settings';
 }

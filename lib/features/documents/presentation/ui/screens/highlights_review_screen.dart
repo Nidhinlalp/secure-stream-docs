@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:secure_stream_docs/core/ui/themes/app_colors.dart';
+import 'package:secure_stream_docs/core/ui/themes/app_sizes.dart';
+import 'package:secure_stream_docs/core/ui/themes/app_text_theme.dart';
 import 'package:secure_stream_docs/core/utils/helpers/highlight_helper.dart';
 import 'package:secure_stream_docs/features/documents/presentation/logic/highlight/highlight_cubit.dart';
 import 'package:secure_stream_docs/features/documents/presentation/ui/widgets/highlight/highlight_page_section.dart';
@@ -45,22 +49,22 @@ class _HighlightsReviewScreenState extends State<HighlightsReviewScreen> {
           if (state is HighlightError) {
             return Center(
               child: Padding(
-                padding: const EdgeInsets.all(24),
+                padding: EdgeInsets.all(AppSizses.l2.sp),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(
+                    Icon(
                       Icons.error_outline,
-                      size: 48,
-                      color: Colors.red,
+                      size: AppSizses.xl2.sp,
+                      color: AppColors.error,
                     ),
-                    const SizedBox(height: 16),
+                    AppSizses.height(AppSizses.l),
                     Text(
                       state.message,
                       textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.titleMedium,
+                      style: AppTextStyle.titleMedium(context),
                     ),
-                    const SizedBox(height: 24),
+                    AppSizses.height(AppSizses.l2),
                     ElevatedButton.icon(
                       onPressed: () => context.read<HighlightCubit>().load(
                         widget.documentId,
@@ -76,20 +80,28 @@ class _HighlightsReviewScreenState extends State<HighlightsReviewScreen> {
 
           if (state is HighlightLoaded) {
             if (state.highlights.isEmpty) {
-              return const Center(
+              return Center(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.highlight_off, size: 64, color: Colors.grey),
-                    SizedBox(height: 16),
+                    Icon(
+                      Icons.highlight_off,
+                      size: AppSizses.xxl.sp,
+                      color: AppColors.textSecondary(context),
+                    ),
+                    AppSizses.height(AppSizses.l),
                     Text(
                       'No highlights yet',
-                      style: TextStyle(fontSize: 18, color: Colors.grey),
+                      style: AppTextStyle.titleMedium(context)?.copyWith(
+                        color: AppColors.textSecondary(context),
+                      ),
                     ),
-                    SizedBox(height: 8),
+                    AppSizses.height(AppSizses.s),
                     Text(
                       'Select text in the PDF viewer to add highlights',
-                      style: TextStyle(fontSize: 14, color: Colors.grey),
+                      style: AppTextStyle.bodySmall(context)?.copyWith(
+                        color: AppColors.textSecondary(context),
+                      ),
                     ),
                   ],
                 ),
@@ -106,7 +118,7 @@ class _HighlightsReviewScreenState extends State<HighlightsReviewScreen> {
             final sortedPages = grouped.keys.toList()..sort();
 
             return ListView.builder(
-              padding: const EdgeInsets.all(16),
+              padding: EdgeInsets.all(AppSizses.l.sp),
               itemCount: sortedPages.length,
               itemBuilder: (context, index) {
                 final page = sortedPages[index];

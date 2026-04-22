@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'package:secure_stream_docs/core/ui/themes/app_sizes.dart';
+import 'package:secure_stream_docs/core/ui/themes/app_text_theme.dart';
+
 class VideoBufferingOverlay extends StatelessWidget {
   final bool isBuffering;
 
@@ -20,12 +23,12 @@ class VideoBufferingOverlay extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   const CircularProgressIndicator(color: Colors.white),
-                  const SizedBox(height: 12),
+                  AppSizses.height(AppSizses.m),
                   Text(
                     'Buffering...',
-                    style: Theme.of(
-                      context,
-                    ).textTheme.bodySmall?.copyWith(color: Colors.white),
+                    style: AppTextStyle.bodySmall(context)?.copyWith(
+                      color: Colors.white,
+                    ),
                   ),
                 ],
               ),

@@ -1,17 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'package:secure_stream_docs/core/ui/themes/app_colors.dart';
+import 'package:secure_stream_docs/core/ui/themes/app_sizes.dart';
 import 'package:secure_stream_docs/features/video_player/presentation/logic/bloc/video_player_bloc.dart';
 
-/// VideoActionRow
-///
-/// Contains:
-///   1. A custom URL text field — on submit, validates the URL, dispatches
-///      [AddCustomUrl] then [LoadVideo] via [VideoPlayerBloc].
-///   2. A Download action button (placeholder; extend as needed).
-///
-/// URL validation and Bloc dispatch are handled here, keeping
-/// [VideoScreenView] clean.
 class VideoActionRow extends StatefulWidget {
   const VideoActionRow({super.key});
 
@@ -101,9 +95,9 @@ class _VideoActionRowState extends State<VideoActionRow> {
                   border: const OutlineInputBorder(),
                   errorText: _validationError,
                   isDense: true,
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 12,
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: AppSizses.m.sp,
+                    vertical: AppSizses.m.sp,
                   ),
                 ),
                 onChanged: (_) {
@@ -116,30 +110,30 @@ class _VideoActionRowState extends State<VideoActionRow> {
                 },
               ),
             ),
-            const SizedBox(width: 8),
+            AppSizses.width(AppSizses.s),
             // Send/Load button
             BlocBuilder<VideoPlayerBloc, VideoPlayerState>(
               builder: (context, state) {
                 final isLoading = state is VideoPlayerLoading;
                 return SizedBox(
-                  height: 48,
+                  height: AppSizses.xl2.sp,
                   child: ElevatedButton.icon(
                     onPressed: isLoading ? null : _onLoad,
                     icon: isLoading
-                        ? const SizedBox(
-                            width: 16,
-                            height: 16,
+                        ? SizedBox(
+                            width: AppSizses.l.sp,
+                            height: AppSizses.l.sp,
                             child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              color: Colors.white,
+                              strokeWidth: AppSizses.px1.sp,
+                              color: AppColors.onPrimary,
                             ),
                           )
-                        : const Icon(Icons.send_rounded, size: 18),
+                        : Icon(Icons.send_rounded, size: AppSizses.l1.sp),
                     label: const Text('Load'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primary,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      foregroundColor: AppColors.onPrimary,
+                      padding: EdgeInsets.symmetric(horizontal: AppSizses.m.sp),
                     ),
                   ),
                 );
@@ -148,7 +142,7 @@ class _VideoActionRowState extends State<VideoActionRow> {
           ],
         ),
 
-        const SizedBox(height: 12),
+        AppSizses.height(AppSizses.m),
       ],
     );
   }

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+
+import 'package:secure_stream_docs/core/ui/themes/app_sizes.dart';
 
 class ConfirmationDialog extends StatelessWidget {
   final String title;
@@ -48,7 +51,9 @@ class ConfirmationDialog extends StatelessWidget {
         confirmColor ?? Theme.of(context).colorScheme.primary;
 
     return AlertDialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppSizses.l.sp),
+      ),
       title: Text(title),
       content: Text(message),
       actions: [

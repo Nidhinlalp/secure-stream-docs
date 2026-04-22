@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+
 import 'package:secure_stream_docs/core/ui/themes/app_colors.dart';
+import 'package:secure_stream_docs/core/ui/themes/app_sizes.dart';
 
 class SnackBarHelper {
   static void showErrorSnackBar({
@@ -12,7 +14,7 @@ class SnackBarHelper {
         content: Row(
           children: [
             const Icon(Icons.error_outline, color: Colors.white),
-            const SizedBox(width: 8),
+            AppSizses.width(AppSizses.s),
             Expanded(
               child: Text(message, style: const TextStyle(color: Colors.white)),
             ),

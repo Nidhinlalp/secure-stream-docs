@@ -9,6 +9,9 @@ class AppColors {
   static const Color primary = Color(0xFF29B7CE);
   static const Color primaryDark = Color(0xFF1D9EAD);
 
+  /// Content color on top of primary (e.g. button text/icons)
+  static const Color onPrimary = Color(0xFFFFFFFF);
+
   /// Accent (Highlight / Action)
   static const Color accent = Color(0xFFF4B41A);
 

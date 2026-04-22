@@ -4,7 +4,11 @@ import 'package:better_player_plus/better_player_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'package:secure_stream_docs/core/ui/themes/app_colors.dart';
+import 'package:secure_stream_docs/core/ui/themes/app_sizes.dart';
+import 'package:secure_stream_docs/core/ui/themes/app_text_theme.dart';
 import 'package:secure_stream_docs/features/video_player/domain/entities/video.dart';
 import 'package:secure_stream_docs/features/video_player/presentation/logic/bloc/video_player_bloc.dart';
 import 'video_buffering_overlay.dart';
@@ -224,16 +228,20 @@ class _VideoPlayerViewState extends State<VideoPlayerView>
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.error_outline, size: 48, color: AppColors.error),
-            const SizedBox(height: 12),
+            Icon(
+              Icons.error_outline,
+              size: AppSizses.xl2.sp,
+              color: AppColors.error,
+            ),
+            AppSizses.height(AppSizses.m),
             Text(
               _friendlyPlayerError(message),
               textAlign: TextAlign.center,
-              style: Theme.of(
-                context,
-              ).textTheme.bodyMedium?.copyWith(color: Colors.white70),
+              style: AppTextStyle.bodyMedium(context)?.copyWith(
+                color: Colors.white70,
+              ),
             ),
-            const SizedBox(height: 16),
+            AppSizses.height(AppSizses.l),
             OutlinedButton.icon(
               onPressed: () {
                 _disposePlayer();
@@ -280,10 +288,10 @@ class _VideoPlayerViewState extends State<VideoPlayerView>
           else
             Container(
               color: AppColors.darkSurface,
-              child: const Center(
+              child: Center(
                 child: Icon(
                   Icons.videocam_rounded,
-                  size: 64,
+                  size: AppSizses.xxl.sp,
                   color: Colors.white24,
                 ),
               ),

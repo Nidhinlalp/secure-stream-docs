@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import 'package:secure_stream_docs/core/ui/themes/app_colors.dart';
+import 'package:secure_stream_docs/core/ui/themes/app_sizes.dart';
+import 'package:secure_stream_docs/core/ui/themes/app_text_theme.dart';
 
 class ErrorState extends StatelessWidget {
   final String message;
@@ -10,45 +15,43 @@ class ErrorState extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(32),
+        padding: EdgeInsets.all(AppSizses.xl.sp),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
               Icons.error_outline,
-              size: 64,
-              color: Theme.of(context).colorScheme.error,
+              size: AppSizses.xxl.sp,
+              color: AppColors.error,
             ),
-            const SizedBox(height: 16),
+            AppSizses.height(AppSizses.l),
             Text(
               'Something went wrong',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                color: Theme.of(context).colorScheme.error,
+              style: AppTextStyle.titleLarge(context)?.copyWith(
+                color: AppColors.error,
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 8),
+            AppSizses.height(AppSizses.s),
             Text(
               message,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(
-                  context,
-                ).textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
+              style: AppTextStyle.bodyMedium(context)?.copyWith(
+                color: AppColors.textSecondary(context),
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 24),
+            AppSizses.height(AppSizses.l2),
             ElevatedButton.icon(
               onPressed: onRetry,
               icon: const Icon(Icons.refresh),
               label: const Text('Retry'),
               style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 12,
+                padding: EdgeInsets.symmetric(
+                  horizontal: AppSizses.l2.sp,
+                  vertical: AppSizses.m.sp,
                 ),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(AppSizses.s.sp),
                 ),
               ),
             ),

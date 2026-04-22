@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import 'package:secure_stream_docs/core/ui/themes/app_colors.dart';
+import 'package:secure_stream_docs/core/ui/themes/app_sizes.dart';
+import 'package:secure_stream_docs/core/ui/themes/app_text_theme.dart';
 import 'package:secure_stream_docs/core/utils/helpers/date_format_helper.dart';
 import 'package:secure_stream_docs/features/documents/domain/entities/highlight.dart';
 
@@ -14,23 +18,25 @@ class HighlightCard extends StatelessWidget {
 
     return Card(
       elevation: 1,
-      margin: const EdgeInsets.symmetric(vertical: 4),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      margin: EdgeInsets.symmetric(vertical: AppSizses.xs.sp),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppSizses.s1.sp),
+      ),
       child: Padding(
-        padding: const EdgeInsets.all(12),
+        padding: EdgeInsets.all(AppSizses.m.sp),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Colour swatch
             Container(
-              width: 6,
-              height: 48,
+              width: AppSizses.xs1.sp,
+              height: AppSizses.xl2.sp,
               decoration: BoxDecoration(
                 color: highlight.color,
-                borderRadius: BorderRadius.circular(3),
+                borderRadius: BorderRadius.circular(AppSizses.px1.sp + 1),
               ),
             ),
-            const SizedBox(width: 12),
+            AppSizses.width(AppSizses.m),
 
             // Text + timestamp
             Expanded(
@@ -39,17 +45,17 @@ class HighlightCard extends StatelessWidget {
                 children: [
                   Text(
                     highlight.text,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    style: AppTextStyle.bodyMedium(context)?.copyWith(
                       fontWeight: FontWeight.w500,
                     ),
                     maxLines: 4,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(height: 6),
+                  AppSizses.height(AppSizses.xs1),
                   Text(
                     formattedDate,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Colors.grey.shade600,
+                    style: AppTextStyle.bodySmall(context)?.copyWith(
+                      color: AppColors.textSecondary(context),
                     ),
                   ),
                 ],

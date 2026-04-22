@@ -3,10 +3,14 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pdfrx/pdfrx.dart';
 import 'package:uuid/uuid.dart';
 
+import 'package:secure_stream_docs/core/ui/themes/app_colors.dart';
+import 'package:secure_stream_docs/core/ui/themes/app_sizes.dart';
+import 'package:secure_stream_docs/core/ui/themes/app_text_theme.dart';
 import 'package:secure_stream_docs/features/documents/domain/entities/highlight.dart';
 import 'package:secure_stream_docs/features/documents/presentation/logic/highlight/highlight_cubit.dart';
 import 'package:secure_stream_docs/features/documents/presentation/logic/viewer/viewer_cubit.dart';
@@ -145,19 +149,21 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
       builder: (ctx) => AlertDialog(
         title: const Text('Pick highlight colour'),
         content: Wrap(
-          spacing: 10,
-          runSpacing: 10,
+          spacing: AppSizses.s1,
+          runSpacing: AppSizses.s1,
           children: colors
               .map(
                 (c) => GestureDetector(
                   onTap: () => Navigator.pop(ctx, c),
                   child: Container(
-                    width: 44,
-                    height: 44,
+                    width: AppSizses.xl1.sp,
+                    height: AppSizses.xl1.sp,
                     decoration: BoxDecoration(
                       color: c,
-                      border: Border.all(color: Colors.grey.shade400),
-                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                        color: AppColors.textSecondary(context),
+                      ),
+                      borderRadius: BorderRadius.circular(AppSizses.s.sp),
                     ),
                   ),
                 ),
@@ -212,13 +218,16 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
         body: BlocBuilder<ViewerCubit, ViewerState>(
           builder: (context, state) {
             if (state is ViewerLoading) {
-              return const Center(
+              return Center(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    CircularProgressIndicator(),
-                    SizedBox(height: 16),
-                    Text('Decrypting document…'),
+                    const CircularProgressIndicator(),
+                    AppSizses.height(AppSizses.l),
+                    Text(
+                      'Decrypting document…',
+                      style: AppTextStyle.bodyMedium(context),
+                    ),
                   ],
                 ),
               );
@@ -226,22 +235,22 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
             if (state is ViewerError) {
               return Center(
                 child: Padding(
-                  padding: const EdgeInsets.all(24),
+                  padding: EdgeInsets.all(AppSizses.l2.sp),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(
+                      Icon(
                         Icons.error_outline,
-                        size: 48,
-                        color: Colors.red,
+                        size: AppSizses.xl2.sp,
+                        color: AppColors.error,
                       ),
-                      const SizedBox(height: 16),
+                      AppSizses.height(AppSizses.l),
                       Text(
                         state.message,
                         textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.titleMedium,
+                        style: AppTextStyle.titleMedium(context),
                       ),
-                      const SizedBox(height: 24),
+                      AppSizses.height(AppSizses.l2),
                       ElevatedButton.icon(
                         onPressed: _retry,
                         icon: const Icon(Icons.refresh),

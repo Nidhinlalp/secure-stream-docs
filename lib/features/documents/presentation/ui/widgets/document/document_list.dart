@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import 'package:secure_stream_docs/core/ui/themes/app_sizes.dart';
 import 'package:secure_stream_docs/core/utils/helpers/snackbar_helper.dart';
 import 'package:secure_stream_docs/features/documents/domain/entities/document.dart';
-import 'package:secure_stream_docs/features/documents/presentation/logic/document/documents_bloc.dart';
-import 'package:secure_stream_docs/core/utils/helpers/confirmation_dialog.dart';
-import 'package:secure_stream_docs/features/documents/presentation/router/document_routes.dart';
 import 'package:secure_stream_docs/features/documents/presentation/ui/widgets/document/document_card.dart';
 import 'package:secure_stream_docs/features/documents/presentation/ui/widgets/document/download_progress_dialog.dart';
+import 'package:secure_stream_docs/features/documents/presentation/logic/document/documents_bloc.dart';
+import 'package:secure_stream_docs/features/documents/presentation/router/document_routes.dart';
+import 'package:secure_stream_docs/core/utils/helpers/confirmation_dialog.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class DocumentList extends StatelessWidget {
   final List<Document> documents;
@@ -20,9 +23,9 @@ class DocumentList extends StatelessWidget {
         context.read<DocumentsBloc>().add(LoadDocuments());
       },
       child: ListView.separated(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(AppSizses.l.sp),
         itemCount: documents.length,
-        separatorBuilder: (context, index) => const SizedBox(height: 12),
+        separatorBuilder: (context, index) => AppSizses.height(AppSizses.m),
         itemBuilder: (context, index) {
           final document = documents[index];
 

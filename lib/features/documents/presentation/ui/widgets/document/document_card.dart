@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import 'package:secure_stream_docs/core/ui/themes/app_colors.dart';
+import 'package:secure_stream_docs/core/ui/themes/app_sizes.dart';
+import 'package:secure_stream_docs/core/ui/themes/app_text_theme.dart';
 import 'package:secure_stream_docs/features/documents/domain/entities/document.dart';
 import 'package:secure_stream_docs/features/documents/presentation/ui/widgets/document/download_button.dart';
 import 'package:secure_stream_docs/features/documents/presentation/ui/widgets/document/download_progress.dart';
@@ -21,32 +26,32 @@ class DocumentCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppSizses.m.sp),
+      ),
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppSizses.m.sp),
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: EdgeInsets.all(AppSizses.l.sp),
           child: Row(
             children: [
               // PDF Icon
               Container(
-                width: 48,
-                height: 48,
+                width: AppSizses.xl2.sp,
+                height: AppSizses.xl2.sp,
                 decoration: BoxDecoration(
-                  color: Theme.of(
-                    context,
-                  ).iconTheme.color?.withValues(alpha: 0.5),
-                  borderRadius: BorderRadius.circular(8),
+                  color: AppColors.primary.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(AppSizses.s.sp),
                 ),
                 child: Icon(
                   Icons.picture_as_pdf,
-                  color: Theme.of(context).primaryColor,
-                  size: 28,
+                  color: AppColors.primary,
+                  size: AppSizses.l3.sp,
                 ),
               ),
 
-              const SizedBox(width: 16),
+              AppSizses.width(AppSizses.l),
 
               // Document info
               Expanded(
@@ -55,19 +60,17 @@ class DocumentCard extends StatelessWidget {
                   children: [
                     Text(
                       document.name,
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      style: AppTextStyle.titleMedium(context)?.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(height: 4),
+                    AppSizses.height(AppSizses.xs),
                     Text(
                       document.isDownloaded ? "Downloaded" : "Not downloaded",
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(
-                          context,
-                        ).textTheme.bodySmall?.color?.withValues(alpha: 0.7),
+                      style: AppTextStyle.bodySmall(context)?.copyWith(
+                        color: AppColors.textSecondary(context),
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -76,7 +79,7 @@ class DocumentCard extends StatelessWidget {
                 ),
               ),
 
-              const SizedBox(width: 16),
+              AppSizses.width(AppSizses.l),
 
               // Action buttons
               if (document.isDownloading)
@@ -100,14 +103,14 @@ class DocumentCard extends StatelessWidget {
             onPressed: onTap,
             icon: const Icon(Icons.open_in_new),
             tooltip: 'Open',
-            color: Theme.of(context).primaryColor,
+            color: AppColors.primary,
           ),
-          const SizedBox(width: 8),
+          AppSizses.width(AppSizses.s),
           IconButton(
             onPressed: onDelete,
             icon: const Icon(Icons.delete_outline),
             tooltip: 'Delete',
-            color: Theme.of(context).colorScheme.error,
+            color: AppColors.error,
           ),
         ],
       );

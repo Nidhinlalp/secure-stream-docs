@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import 'package:secure_stream_docs/core/ui/themes/app_sizes.dart';
 
 class DownloadButton extends StatelessWidget {
   final VoidCallback? onPressed;
@@ -12,8 +15,13 @@ class DownloadButton extends StatelessWidget {
       icon: const Icon(Icons.download),
       label: const Text('Download'),
       style: ElevatedButton.styleFrom(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        padding: EdgeInsets.symmetric(
+          horizontal: AppSizses.l.sp,
+          vertical: AppSizses.s.sp,
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppSizses.s.sp),
+        ),
       ),
     );
   }

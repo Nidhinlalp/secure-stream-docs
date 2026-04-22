@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import 'package:secure_stream_docs/core/ui/themes/app_colors.dart';
+import 'package:secure_stream_docs/core/ui/themes/app_sizes.dart';
+import 'package:secure_stream_docs/core/ui/themes/app_text_theme.dart';
 import 'package:secure_stream_docs/features/documents/domain/entities/highlight.dart';
 import 'package:secure_stream_docs/features/documents/presentation/ui/widgets/highlight/highlight_card.dart';
 
@@ -20,28 +24,28 @@ class HighlightPageSection extends StatelessWidget {
       children: [
         // Page header
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8),
+          padding: EdgeInsets.symmetric(vertical: AppSizses.s.sp),
           child: Row(
             children: [
               Icon(
                 Icons.description_outlined,
-                size: 20,
-                color: Theme.of(context).primaryColor,
+                size: AppSizses.l1.sp,
+                color: AppColors.primary,
               ),
-              const SizedBox(width: 8),
+              AppSizses.width(AppSizses.s),
               Text(
                 'Page $pageNumber',
-                style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                style: AppTextStyle.titleSmall(context)?.copyWith(
                   fontWeight: FontWeight.bold,
-                  color: Theme.of(context).primaryColor,
+                  color: AppColors.primary,
                 ),
               ),
-              const SizedBox(width: 8),
+              AppSizses.width(AppSizses.s),
               Text(
                 '(${highlights.length} highlight${highlights.length > 1 ? 's' : ''})',
-                style: Theme.of(
-                  context,
-                ).textTheme.bodySmall?.copyWith(color: Colors.grey),
+                style: AppTextStyle.bodySmall(context)?.copyWith(
+                  color: AppColors.textSecondary(context),
+                ),
               ),
             ],
           ),
@@ -52,7 +56,7 @@ class HighlightPageSection extends StatelessWidget {
           (h) => HighlightCard(highlight: h),
         ),
 
-        const SizedBox(height: 16),
+        AppSizses.height(AppSizses.l),
       ],
     );
   }

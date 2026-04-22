@@ -165,7 +165,12 @@ class DocumentRepositoryImpl implements DocumentRepository {
   }
 
   // ─────────────────────────────────────────────────────────────────────────
-  // Delete — remove encrypted file + Isar record
+  // Delete — remove encrypted file + all highlights + Isar record
+  //
+  // Order:
+  //  1. Delete encrypted file from disk
+  //  2. Delete all highlights for this document (cascade)
+  //  3. Delete the document record from Isar
   // ─────────────────────────────────────────────────────────────────────────
   @override
   EitherUnit deleteDocument(String id) async {
@@ -175,12 +180,16 @@ class DocumentRepositoryImpl implements DocumentRepository {
         final encFile = File(doc.localPath!);
         if (await encFile.exists()) await encFile.delete();
       }
+      // Cascade: remove all highlights belonging to this document
+      await _local.deleteHighlights(id);
+      // Remove the document record itself
       await _local.deleteDocument(id);
       return const Right(unit);
     } catch (e) {
       return Left(CacheFailure('Delete failed: ${e.toString()}'));
     }
   }
+
 
   // ─────────────────────────────────────────────────────────────────────────
   // Highlight → persist to Isar (no encryption involved)

@@ -76,4 +76,24 @@ class DocumentLocalDataSourceImpl implements DocumentLocalDataSource {
         .docIdEqualTo(docId)
         .findAll();
   }
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // Delete all highlights for a document (cascade-delete on document removal).
+  // ─────────────────────────────────────────────────────────────────────────
+  @override
+  Future<void> deleteHighlights(String docId) async {
+    await _storage.isar.writeTxn(() async {
+      // Fetch all Isar-internal IDs for highlights belonging to this document
+      final ids = await _storage.isar.highlightModels
+          .filter()
+          .docIdEqualTo(docId)
+          .idProperty()
+          .findAll();
+
+      if (ids.isNotEmpty) {
+        await _storage.isar.highlightModels.deleteAll(ids);
+      }
+    });
+  }
 }
+

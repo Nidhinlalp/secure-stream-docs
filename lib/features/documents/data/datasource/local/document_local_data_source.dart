@@ -31,4 +31,10 @@ abstract class DocumentLocalDataSource {
   // Get all highlights for a document from local storage.
   // ─────────────────────────────────────────────────────────────────────────
   Future<List<HighlightModel>> getHighlights(String docId);
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // Delete all highlights for a document from local storage.
+  // Called as part of the cascade-delete when a document is removed.
+  // ─────────────────────────────────────────────────────────────────────────
+  Future<void> deleteHighlights(String docId);
 }

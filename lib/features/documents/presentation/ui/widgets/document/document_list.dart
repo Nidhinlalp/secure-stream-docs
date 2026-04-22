@@ -54,7 +54,7 @@ class DocumentList extends StatelessWidget {
                 context: context,
                 title: 'Delete Document',
                 message:
-                    'Are you sure you want to delete "${document.name}"?',
+                    'Are you sure you want to delete "${document.name}"?\n\nThis will also permanently delete all saved highlights for this document.',
                 confirmLabel: 'Delete',
                 confirmColor: Theme.of(context).colorScheme.error,
                 onConfirm: () {

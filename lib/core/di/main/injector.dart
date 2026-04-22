@@ -3,22 +3,14 @@ import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:isar_community/isar.dart';
+import 'package:secure_stream_docs/core/di/document/injector.dart'
+    as document_di;
+import 'package:secure_stream_docs/core/di/video_player/injector.dart'
+    as video_di;
 import 'package:secure_stream_docs/core/local/isar_initializer.dart';
 import 'package:secure_stream_docs/core/local/local_storage_client.dart';
 import 'package:secure_stream_docs/core/network/network_client.dart';
 import 'package:secure_stream_docs/core/network/network_info.dart';
 import 'package:secure_stream_docs/core/utils/logger/logger.dart';
-import 'package:secure_stream_docs/features/video_player/data/datasource/local/local_video_data_source.dart';
-import 'package:secure_stream_docs/features/video_player/data/datasource/local/local_video_data_source_impl.dart';
-import 'package:secure_stream_docs/features/video_player/domain/repositories/video_repository.dart';
-import 'package:secure_stream_docs/features/video_player/data/repositories/video_repository_impl.dart';
-import 'package:secure_stream_docs/features/video_player/domain/usecases/clear_playback_position.dart';
-import 'package:secure_stream_docs/features/video_player/domain/usecases/delete_custom_url.dart';
-import 'package:secure_stream_docs/features/video_player/domain/usecases/get_custom_urls.dart';
-import 'package:secure_stream_docs/features/video_player/domain/usecases/get_last_playback_position.dart';
-import 'package:secure_stream_docs/features/video_player/domain/usecases/get_or_create_video.dart';
-import 'package:secure_stream_docs/features/video_player/domain/usecases/save_custom_url.dart';
-import 'package:secure_stream_docs/features/video_player/domain/usecases/update_playback_position.dart';
-import 'package:secure_stream_docs/features/video_player/presentation/logic/bloc/video_player_bloc.dart';
 
 part 'injector.main.dart';

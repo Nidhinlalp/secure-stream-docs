@@ -29,7 +29,7 @@ dependencies:
   better_player_plus: ^1.1.5
 
   ## this for pdf reader
-  pdfx: ^2.2.24
+  pdfrx: ^2.2.24
 
   ## this for local database
   isar_community: ^3.3.2
@@ -54,6 +54,9 @@ dependencies:
 
   ## this for getting app directory
   path_provider: ^2.1.5
+
+  ## this for generating unique ids
+  uuid: ^4.5.3
 
 dev_dependencies:
   flutter_test:

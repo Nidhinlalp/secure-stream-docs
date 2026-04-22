@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class AppColors {
   // ==============================
-  // 🎯 BRAND COLORS
+  //  BRAND COLORS
   // ==============================
 
   /// Primary Brand (Video / Identity)
@@ -16,7 +16,7 @@ class AppColors {
   static const Color secondary = Color(0xFF2A2B2D);
 
   // ==============================
-  // 🌑 DARK THEME
+  //  DARK THEME
   // ==============================
 
   static const Color darkBackground = Color(0xFF131315);
@@ -27,7 +27,7 @@ class AppColors {
   static const Color darkTextSecondary = Color(0xFFBABABA);
 
   // ==============================
-  // ☀️ LIGHT THEME
+  //  LIGHT THEME
   // ==============================
 
   static const Color lightBackground = Color(0xFFF8F8FF);
@@ -38,7 +38,7 @@ class AppColors {
   static const Color lightTextSecondary = Color(0xFF696969);
 
   // ==============================
-  // 🔐 FEATURE COLORS
+  //  FEATURE COLORS
   // ==============================
 
   /// Video Player
@@ -56,7 +56,7 @@ class AppColors {
   static const Color secureGlow = Color(0xFF2CE2F4);
 
   // ==============================
-  // ⚠️ STATES
+  //  STATES
   // ==============================
 
   static const Color success = Color(0xFF46D490);
@@ -64,7 +64,7 @@ class AppColors {
   static const Color warning = Color(0xFFF2B705);
 
   // ==============================
-  // 🎨 ICON (APP ICON SPECIFIC)
+  //  ICON (APP ICON SPECIFIC)
   // ==============================
 
   /// Dark Mode Icon Background
@@ -81,7 +81,7 @@ class AppColors {
   ];
 
   // ==============================
-  // 🌈 GRADIENTS
+  //  GRADIENTS
   // ==============================
 
   static const LinearGradient darkBackgroundGradient = LinearGradient(
@@ -97,26 +97,26 @@ class AppColors {
   );
 
   // ==============================
-  // 🧠 HELPERS
+  //  HELPERS
   // ==============================
 
   static Color background(BuildContext context) =>
       Theme.of(context).brightness == Brightness.dark
-          ? darkBackground
-          : lightBackground;
+      ? darkBackground
+      : lightBackground;
 
   static Color surface(BuildContext context) =>
       Theme.of(context).brightness == Brightness.dark
-          ? darkSurface
-          : lightSurface;
+      ? darkSurface
+      : lightSurface;
 
   static Color textPrimary(BuildContext context) =>
       Theme.of(context).brightness == Brightness.dark
-          ? darkTextPrimary
-          : lightTextPrimary;
+      ? darkTextPrimary
+      : lightTextPrimary;
 
   static Color textSecondary(BuildContext context) =>
       Theme.of(context).brightness == Brightness.dark
-          ? darkTextSecondary
-          : lightTextSecondary;
+      ? darkTextSecondary
+      : lightTextSecondary;
 }

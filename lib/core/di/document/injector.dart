@@ -1,0 +1,21 @@
+import 'package:secure_stream_docs/core/di/main/injector.dart';
+import 'package:secure_stream_docs/core/local/local_storage_client.dart';
+import 'package:secure_stream_docs/core/network/network_client.dart';
+import 'package:secure_stream_docs/core/security/file_encryption_service.dart';
+import 'package:secure_stream_docs/features/documents/data/datasource/local/document_local_data_source.dart';
+import 'package:secure_stream_docs/features/documents/data/datasource/local/document_local_data_source_impl.dart';
+import 'package:secure_stream_docs/features/documents/data/datasource/remote/document_remote_data_source.dart';
+import 'package:secure_stream_docs/features/documents/data/datasource/remote/document_remote_data_source_impl.dart';
+import 'package:secure_stream_docs/features/documents/data/repositories/document_repository_impl.dart';
+import 'package:secure_stream_docs/features/documents/domain/repositories/document_repository.dart';
+import 'package:secure_stream_docs/features/documents/domain/usecases/delete_document.dart';
+import 'package:secure_stream_docs/features/documents/domain/usecases/download_document.dart';
+import 'package:secure_stream_docs/features/documents/domain/usecases/get_document.dart';
+import 'package:secure_stream_docs/features/documents/domain/usecases/get_documents.dart';
+import 'package:secure_stream_docs/features/documents/domain/usecases/get_highlights.dart';
+import 'package:secure_stream_docs/features/documents/domain/usecases/save_highlight.dart';
+import 'package:secure_stream_docs/features/documents/presentation/logic/document/documents_bloc.dart';
+import 'package:secure_stream_docs/features/documents/presentation/logic/highlight/highlight_cubit.dart';
+import 'package:secure_stream_docs/features/documents/presentation/logic/viewer/viewer_cubit.dart';
+
+part 'injector.document.dart';

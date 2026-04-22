@@ -50,7 +50,7 @@ class AppSizses {
   static double x2 = 160.0;
 
   static double x3 = 176.0;
-  
+
   static const double x5 = 208.0;
 
   /// Spacers for height and width

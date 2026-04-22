@@ -14,10 +14,7 @@ class SnackBarHelper {
             const Icon(Icons.error_outline, color: Colors.white),
             const SizedBox(width: 8),
             Expanded(
-              child: Text(
-                message,
-                style: const TextStyle(color: Colors.white),
-              ),
+              child: Text(message, style: const TextStyle(color: Colors.white)),
             ),
           ],
         ),

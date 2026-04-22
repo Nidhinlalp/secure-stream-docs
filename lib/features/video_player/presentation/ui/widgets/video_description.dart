@@ -14,10 +14,10 @@ class VideoDescription extends StatelessWidget {
     return Text(
       description ?? 'No description available',
       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-            color: AppColors.textSecondary(context),
-            height: 1.5,
-            fontSize: AppSizses.l.sp,
-          ),
+        color: AppColors.textSecondary(context),
+        height: 1.5,
+        fontSize: AppSizses.l.sp,
+      ),
     );
   }
 }

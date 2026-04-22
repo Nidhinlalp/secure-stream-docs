@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:secure_stream_docs/features/downloads/presentation/router/download_routes.dart';
 
 class HomeScreen extends StatelessWidget {
   final StatefulNavigationShell navigationShell;
@@ -10,16 +9,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Secure Stream'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.download_outlined),
-            tooltip: 'Downloads',
-            onPressed: () => const DownloadRoute().push(context),
-          ),
-        ],
-      ),
+      appBar: AppBar(title: const Text('Secure Stream')),
       body: navigationShell,
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: navigationShell.currentIndex,

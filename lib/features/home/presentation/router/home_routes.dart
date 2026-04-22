@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:secure_stream_docs/core/router/route_names.dart';
 import 'package:secure_stream_docs/core/router/route_paths.dart';
+import 'package:secure_stream_docs/features/documents/presentation/ui/screens/documents_screen.dart';
+import 'package:secure_stream_docs/features/home/presentation/ui/screens/home_screen.dart';
 import 'package:secure_stream_docs/features/video_player/presentation/ui/screens/video_screen.dart';
-import 'package:secure_stream_docs/features/documents/presentation/ui/screens/document_screen.dart';
-import '../ui/screens/home_screen.dart';
 
 part 'home_routes.g.dart';
 
@@ -23,7 +23,7 @@ class DocumentRoute extends GoRouteData with $DocumentRoute {
 
   @override
   Widget build(BuildContext context, GoRouterState state) =>
-      const DocumentScreen();
+      const DocumentsScreen();
 }
 
 @TypedStatefulShellRoute<HomeShellRouteData>(

@@ -1,6 +1,8 @@
 import 'package:isar_community/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:secure_stream_docs/core/error/exceptions.dart';
+import 'package:secure_stream_docs/features/documents/data/models/document_model.dart';
+import 'package:secure_stream_docs/features/documents/data/models/highlight_model.dart';
 import 'package:secure_stream_docs/features/video_player/data/models/video_model.dart';
 
 /// Initializes Isar database once at app start with all schemas registered.
@@ -19,7 +21,11 @@ class IsarInitializer {
       // Get the application documents directory
       final dir = await getApplicationDocumentsDirectory();
 
-      final isar = await Isar.open([VideoModelSchema], directory: dir.path);
+      final isar = await Isar.open([
+        VideoModelSchema,
+        DocumentModelSchema,
+        HighlightModelSchema,
+      ], directory: dir.path);
 
       return isar;
     } catch (e) {

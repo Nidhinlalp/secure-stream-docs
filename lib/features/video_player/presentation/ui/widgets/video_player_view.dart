@@ -1,0 +1,296 @@
+import 'dart:async';
+
+import 'package:better_player_plus/better_player_plus.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:secure_stream_docs/core/ui/themes/app_colors.dart';
+import 'package:secure_stream_docs/features/video_player/domain/entities/video.dart';
+import 'package:secure_stream_docs/features/video_player/presentation/logic/bloc/video_player_bloc.dart';
+import 'video_buffering_overlay.dart';
+
+class VideoPlayerView extends StatefulWidget {
+  final Video video;
+  final int initialPositionMs;
+
+  const VideoPlayerView({
+    super.key,
+    required this.video,
+    this.initialPositionMs = 0,
+  });
+
+  @override
+  State<VideoPlayerView> createState() => _VideoPlayerViewState();
+}
+
+class _VideoPlayerViewState extends State<VideoPlayerView>
+    with WidgetsBindingObserver {
+  BetterPlayerController? _controller;
+  bool _isBuffering = false;
+  bool _isPlaying = false;
+  Timer? _debounceTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    _initPlayer();
+  }
+
+  @override
+  void dispose() {
+    _forceSavePosition();
+    _debounceTimer?.cancel();
+    WidgetsBinding.instance.removeObserver(this);
+    _disposePlayer();
+    super.dispose();
+  }
+
+  @override
+  void didUpdateWidget(covariant VideoPlayerView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.video.url != widget.video.url) {
+      _disposePlayer();
+      _resetState();
+      _initPlayer();
+    }
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.inactive) {
+      _forceSavePosition();
+    }
+  }
+
+  void _resetState() {
+    _isBuffering = false;
+    _isPlaying = false;
+    _debounceTimer?.cancel();
+  }
+
+  void _initPlayer() {
+    final dataSource = BetterPlayerDataSource(
+      BetterPlayerDataSourceType.network,
+      widget.video.url,
+      videoFormat: BetterPlayerVideoFormat.hls,
+      cacheConfiguration: const BetterPlayerCacheConfiguration(
+        useCache: true,
+        preCacheSize: 10 * 1024 * 1024,
+        maxCacheSize: 100 * 1024 * 1024,
+        maxCacheFileSize: 50 * 1024 * 1024,
+      ),
+      bufferingConfiguration: const BetterPlayerBufferingConfiguration(
+        minBufferMs: 15000,
+        maxBufferMs: 50000,
+        bufferForPlaybackMs: 2500,
+        bufferForPlaybackAfterRebufferMs: 5000,
+      ),
+    );
+
+    _controller = BetterPlayerController(
+      BetterPlayerConfiguration(
+        aspectRatio: 16 / 9,
+        fit: BoxFit.contain,
+        autoPlay: widget.initialPositionMs <= 0,
+        startAt: widget.initialPositionMs > 0
+            ? Duration(milliseconds: widget.initialPositionMs)
+            : null,
+
+        autoDetectFullscreenDeviceOrientation: true,
+        deviceOrientationsOnFullScreen: const [
+          DeviceOrientation.landscapeLeft,
+          DeviceOrientation.landscapeRight,
+        ],
+        deviceOrientationsAfterFullScreen: const [DeviceOrientation.portraitUp],
+        systemOverlaysAfterFullScreen: SystemUiOverlay.values,
+
+        controlsConfiguration: BetterPlayerControlsConfiguration(
+          playerTheme: BetterPlayerTheme.material,
+          loadingWidget: const SizedBox.shrink(),
+          enablePlayPause: true,
+          enableMute: true,
+          enableFullscreen: true,
+          enableProgressBar: true,
+          enableProgressBarDrag: true,
+          enableProgressText: true,
+          enableSkips: true,
+          enableQualities: true,
+          progressBarPlayedColor: AppColors.primary,
+          progressBarHandleColor: AppColors.primary,
+          progressBarBufferedColor: Colors.white54,
+          progressBarBackgroundColor: Colors.white24,
+          controlBarColor: Colors.black54,
+          iconsColor: Colors.white,
+          playIcon: Icons.play_arrow_rounded,
+          pauseIcon: Icons.pause_rounded,
+          muteIcon: Icons.volume_up_rounded,
+          unMuteIcon: Icons.volume_off_rounded,
+          fullscreenEnableIcon: Icons.fullscreen_rounded,
+          fullscreenDisableIcon: Icons.fullscreen_exit_rounded,
+          skipBackIcon: Icons.replay_10_rounded,
+          skipForwardIcon: Icons.forward_10_rounded,
+          forwardSkipTimeInMilliseconds: 10000,
+          backwardSkipTimeInMilliseconds: 10000,
+          showControlsOnInitialize: true,
+          controlsHideTime: const Duration(seconds: 3),
+        ),
+        errorBuilder: (context, errorMessage) =>
+            _buildPlayerErrorWidget(context, errorMessage),
+        handleLifecycle: true,
+        autoDispose: false,
+      ),
+      betterPlayerDataSource: dataSource,
+    );
+
+    _controller!.addEventsListener(_onPlayerEvent);
+  }
+
+  void _onPlayerEvent(BetterPlayerEvent event) {
+    if (!mounted) return;
+
+    switch (event.betterPlayerEventType) {
+      case BetterPlayerEventType.bufferingStart:
+        setState(() => _isBuffering = true);
+        break;
+
+      case BetterPlayerEventType.bufferingEnd:
+      case BetterPlayerEventType.bufferingUpdate:
+        setState(() => _isBuffering = false);
+        break;
+
+      case BetterPlayerEventType.play:
+        setState(() => _isPlaying = true);
+        break;
+
+      case BetterPlayerEventType.pause:
+      case BetterPlayerEventType.finished:
+        setState(() => _isPlaying = false);
+        _forceSavePosition();
+        break;
+
+      case BetterPlayerEventType.seekTo:
+        _forceSavePosition();
+        break;
+
+      case BetterPlayerEventType.progress:
+        _onProgress(event);
+        break;
+
+      default:
+        break;
+    }
+  }
+
+  void _onProgress(BetterPlayerEvent event) {
+    final progress = event.parameters?['progress'];
+
+    if (progress is! Duration) return;
+
+    final positionMs = progress.inMilliseconds;
+
+    if (positionMs <= 0 || !_isPlaying) return;
+
+    _debounceTimer?.cancel();
+
+    _debounceTimer = Timer(const Duration(seconds: 5), () {
+      if (!mounted) return;
+
+      context.read<VideoPlayerBloc>().add(
+        SavePlaybackPosition(url: widget.video.url, positionMs: positionMs),
+      );
+    });
+  }
+
+  void _forceSavePosition() {
+    final controller = _controller;
+    if (!mounted || controller == null) return;
+
+    final positionMs =
+        controller.videoPlayerController?.value.position.inMilliseconds ?? 0;
+
+    if (positionMs <= 0) return;
+
+    context.read<VideoPlayerBloc>().add(
+      SavePlaybackPosition(url: widget.video.url, positionMs: positionMs),
+    );
+  }
+
+  Widget _buildPlayerErrorWidget(BuildContext context, String? message) {
+    return Container(
+      color: AppColors.darkSurface,
+      child: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.error_outline, size: 48, color: AppColors.error),
+            const SizedBox(height: 12),
+            Text(
+              _friendlyPlayerError(message),
+              textAlign: TextAlign.center,
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(color: Colors.white70),
+            ),
+            const SizedBox(height: 16),
+            OutlinedButton.icon(
+              onPressed: () {
+                _disposePlayer();
+                _resetState();
+                _initPlayer();
+                if (mounted) setState(() {});
+              },
+              icon: const Icon(Icons.refresh),
+              label: const Text('Retry'),
+              style: OutlinedButton.styleFrom(
+                foregroundColor: Colors.white,
+                side: const BorderSide(color: Colors.white54),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  String _friendlyPlayerError(String? raw) {
+    if (raw == null || raw.isEmpty) return 'Failed to load video.';
+    if (raw.contains('network') || raw.contains('connection')) {
+      return 'Network error.\nCheck your connection and retry.';
+    }
+    return 'Failed to load the stream.\nPlease retry.';
+  }
+
+  void _disposePlayer() {
+    _controller?.removeEventsListener(_onPlayerEvent);
+    _controller?.dispose();
+    _controller = null;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AspectRatio(
+      aspectRatio: 16 / 9,
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          if (_controller != null)
+            BetterPlayer(controller: _controller!)
+          else
+            Container(
+              color: AppColors.darkSurface,
+              child: const Center(
+                child: Icon(
+                  Icons.videocam_rounded,
+                  size: 64,
+                  color: Colors.white24,
+                ),
+              ),
+            ),
+          VideoBufferingOverlay(isBuffering: _isBuffering),
+        ],
+      ),
+    );
+  }
+}

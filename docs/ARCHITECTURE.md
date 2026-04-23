@@ -215,12 +215,6 @@ Isar (`isar_community`) is the single local database. It is opened once at start
 | `HighlightModel` | Per-document text highlights | `highlightId`, `docId`, `page`, `text`, `left/top/right/bottom`, `colorValue`, `createdAt` |
 | `VideoModel` | Video playback state | `url`, `lastPositionMs`, `isUserProvided`, `updatedAt` |
 
-### Why Isar
-- **No JSON serialization overhead** — native Dart object persistence.
-- **Typed queries** — filters and sorts are compile-time safe via code generation.
-- **Cross-platform** — works on Android and iOS without platform bridges.
-- **Fast** — suitable for high-frequency writes (e.g., playback position updates).
-
 ---
 
 ## 7. File Security (Encryption)
@@ -271,46 +265,4 @@ GoRouter (initialLocation: /player)
 | `RoutePaths` | URL path strings (e.g. `/docs/:documentId`) |
 | `RouteNames` | Named route identifiers for `goNamed()` navigation |
 
-### BLoC Provisioning at Route Level
-`ViewerCubit` and `HighlightCubit` are provisioned as `BlocProvider` wrappers inside the route's `build()` method (`document_routes.dart`). This means a fresh Cubit instance is created per navigation — there is no shared global instance for these transient states.
-
 ---
-
-## 9. External Dependencies
-
-| Package | Version | Purpose |
-|---|---|---|
-| `flutter_bloc` / `bloc` | 8.x | State management — Bloc and Cubit patterns |
-| `go_router` + `go_router_builder` | 17.x / 4.x | Declarative, type-safe navigation |
-| `better_player_plus` | 1.x | HLS video player with adaptive bitrate, buffering, and controls |
-| `pdfrx` | 2.x | High-performance PDF rendering with text selection and coordinate access |
-| `isar_community` + `isar_community_flutter_libs` | 3.x | Local embedded NoSQL database |
-| `isar_community_generator` | 3.x | Code generation for Isar schemas |
-| `encrypt` | 5.x | AES-256 CBC encryption / decryption |
-| `dartz` | 0.10 | Functional types: `Either<Failure, T>` for error handling |
-| `get_it` | 7.x | Service locator for dependency injection |
-| `dio` | 5.x | HTTP client with interceptor support |
-| `internet_connection_checker_plus` | 2.x | Connectivity detection used in `ConnectivityInterceptor` |
-| `path_provider` | 2.x | Access to app documents dir and system temp dir |
-| `uuid` | 4.x | Unique filenames for downloaded/encrypted files |
-| `equatable` | 2.x | Value equality for Bloc events and states |
-| `flutter_screenutil` | 5.x | Responsive sizing (`AppSizses` tokens are in `.sp` units) |
-
----
-
-## 10. Design Decisions
-
-### Why separate Cubits (`ViewerCubit`, `HighlightCubit`) instead of one Bloc?
-Each concern has a distinct, independent lifecycle. The viewer opens and closes independently of highlight edits. Keeping them separate means simpler state machines, no accidental coupling, and fresh Cubit instances per navigation without leaking highlight state between document sessions.
-
-### Why are highlights stored unencrypted in Isar?
-Highlights contain only coordinate metadata and short text snippets — no binary content. The sensitive binary data (the PDF itself) is always encrypted. Isar data is app-sandbox-restricted on both Android and iOS, providing sufficient protection for highlight records without the decryption overhead.
-
-### Why are decrypted files written to the OS temp directory?
-The `pdfrx` renderer needs a file path, not raw bytes. Writing to `getTemporaryDirectory()` means the OS reclaims the file on device restart or under memory pressure — the plaintext PDF never lives permanently on disk. The encrypted `.enc` original in the app documents directory is the only persistent copy.
-
-### Why is `DocumentsBloc` a `Bloc` while viewer/highlight use `Cubit`?
-`DocumentsBloc` handles a streaming download response (`emit.forEach`) and multiple concurrent event types. The explicit event-based model makes the handler mapping clear and safe for long-running async streams. `Cubit` is used where simple method calls with no event queue are sufficient.
-
-### Why is DI structured as feature injectors?
-`DI.init()` delegates to `VideoPlayerInjector.register()` and `DocumentInjector.register()`, each defined in their own `core/di/<feature>/` file. This keeps the bootstrap class thin and ensures each feature owns its wiring. Adding a new feature requires only adding one registration call and one injector file.

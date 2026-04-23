@@ -148,7 +148,7 @@ Open → Decrypt .enc → Write to OS temp dir → Render → OS auto-cleanup
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/your-org/secure_stream_docs.git
+git clone https://github.com/Nidhinlalp/secure-stream-docs
 cd secure_stream_docs
 
 # 2. Install dependencies

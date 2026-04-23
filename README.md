@@ -117,32 +117,7 @@ Open → Decrypt .enc → Write to OS temp dir → Render → OS auto-cleanup
 
 ---
 
-## Tech Stack
-
-| Category | Technology |
-|---|---|
-| **Framework** | Flutter 3.x (Dart ^3.10) |
-| **State Management** | `flutter_bloc` / `bloc` 8.x |
-| **Navigation** | `go_router` 17.x + `go_router_builder` |
-| **Video Player** | `better_player_plus` 1.x |
-| **PDF Renderer** | `pdfrx` 2.x |
-| **Local Database** | `isar_community` 3.x |
-| **Encryption** | `encrypt` 5.x (AES-256 CBC) |
-| **HTTP Client** | `dio` 5.x |
-| **DI** | `get_it` 7.x |
-| **Error Handling** | `dartz` 0.10 (`Either<Failure, T>`) |
-| **Responsive** | `flutter_screenutil` 5.x |
-
----
-
 ## Getting Started
-
-### Prerequisites
-
-- Flutter SDK `^3.10.0`
-- Dart SDK `^3.10.4`
-- Android Studio / Xcode
-- A physical device or emulator (Android API 21+ / iOS 12+)
 
 ### Setup
 

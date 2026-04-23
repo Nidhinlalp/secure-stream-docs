@@ -6,9 +6,7 @@ import 'package:secure_stream_docs/features/video_player/domain/usecases/get_las
 import 'package:secure_stream_docs/features/video_player/domain/usecases/update_playback_position.dart';
 import 'package:secure_stream_docs/features/video_player/domain/usecases/clear_playback_position.dart';
 import 'package:secure_stream_docs/features/video_player/domain/usecases/save_custom_url.dart';
-import 'package:secure_stream_docs/features/video_player/domain/usecases/get_custom_urls.dart';
 import 'package:secure_stream_docs/features/video_player/domain/usecases/delete_custom_url.dart';
-import 'package:secure_stream_docs/core/usecases/usecase.dart';
 import 'package:secure_stream_docs/features/video_player/domain/usecases/params.dart';
 
 part 'video_player_event.dart';
@@ -20,7 +18,6 @@ class VideoPlayerBloc extends Bloc<VideoPlayerEvent, VideoPlayerState> {
   final UpdatePlaybackPositionUseCase updatePlaybackPosition;
   final ClearPlaybackPositionUseCase clearPlaybackPosition;
   final SaveCustomUrlUseCase saveCustomUrl;
-  final GetCustomUrlsUseCase getCustomUrls;
   final DeleteCustomUrlUseCase deleteCustomUrl;
 
   VideoPlayerBloc({
@@ -29,14 +26,12 @@ class VideoPlayerBloc extends Bloc<VideoPlayerEvent, VideoPlayerState> {
     required this.updatePlaybackPosition,
     required this.clearPlaybackPosition,
     required this.saveCustomUrl,
-    required this.getCustomUrls,
     required this.deleteCustomUrl,
   }) : super(VideoPlayerInitial()) {
     on<LoadVideo>(_onLoadVideo);
     on<SavePlaybackPosition>(_onSavePlayback);
     on<ClearPlaybackPosition>(_onClearPlayback);
     on<AddCustomUrl>(_onAddCustomUrl);
-    on<LoadCustomUrls>(_onLoadCustomUrls);
     on<DeleteCustomUrl>(_onDeleteCustomUrl);
   }
 
@@ -110,75 +105,35 @@ class VideoPlayerBloc extends Bloc<VideoPlayerEvent, VideoPlayerState> {
   }
 
   // ─────────────────────────────────────────────
-  // Add Custom URL
+  // Add Custom URL (fire-and-forget — no state emission)
+  //
+  // Persists the URL to Isar so it can be recalled later.
+  // Does NOT emit any state — the player continues playing
+  // uninterrupted. Errors are silently swallowed because
+  // URL persistence is a non-critical background operation.
   // ─────────────────────────────────────────────
   Future<void> _onAddCustomUrl(
     AddCustomUrl event,
     Emitter<VideoPlayerState> emit,
   ) async {
     try {
-      final result = await saveCustomUrl(UrlParams(event.url));
-
-      result.fold(
-        (failure) {
-          emit(VideoPlayerError(failure.message));
-        },
-        (_) {
-          // Success - optionally reload URLs
-          add(LoadCustomUrls());
-        },
-      );
-    } catch (e) {
-      emit(VideoPlayerError(e.toString()));
+      await saveCustomUrl(UrlParams(event.url));
+    } catch (_) {
+      // Silent fail for background persistence
     }
   }
 
   // ─────────────────────────────────────────────
-  // Load Custom URLs
-  // ─────────────────────────────────────────────
-  Future<void> _onLoadCustomUrls(
-    LoadCustomUrls event,
-    Emitter<VideoPlayerState> emit,
-  ) async {
-    emit(VideoPlayerLoading());
-
-    try {
-      final result = await getCustomUrls(const NoParams());
-
-      result.fold(
-        (failure) {
-          emit(VideoPlayerError(failure.message));
-        },
-        (urls) {
-          emit(CustomUrlsLoaded(urls));
-        },
-      );
-    } catch (e) {
-      emit(VideoPlayerError(e.toString()));
-    }
-  }
-
-  // ─────────────────────────────────────────────
-  // Delete Custom URL
+  // Delete Custom URL (fire-and-forget)
   // ─────────────────────────────────────────────
   Future<void> _onDeleteCustomUrl(
     DeleteCustomUrl event,
     Emitter<VideoPlayerState> emit,
   ) async {
     try {
-      final result = await deleteCustomUrl(UrlParams(event.url));
-
-      result.fold(
-        (failure) {
-          emit(VideoPlayerError(failure.message));
-        },
-        (_) {
-          // Reload the list
-          add(LoadCustomUrls());
-        },
-      );
-    } catch (e) {
-      emit(VideoPlayerError(e.toString()));
+      await deleteCustomUrl(UrlParams(event.url));
+    } catch (_) {
+      // Silent fail for background deletion
     }
   }
 }

@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:secure_stream_docs/core/ui/themes/app_colors.dart';
 import 'package:secure_stream_docs/core/ui/themes/app_sizes.dart';
+import 'package:secure_stream_docs/core/utils/helpers/url_validator.dart';
 import 'package:secure_stream_docs/features/video_player/presentation/logic/bloc/video_player_bloc.dart';
 
 class VideoActionRow extends StatefulWidget {
@@ -25,24 +26,10 @@ class _VideoActionRowState extends State<VideoActionRow> {
     super.dispose();
   }
 
-  // ── Validation ────────────────────────────────────────────────────────────
-
-  bool _isValidUrl(String url) {
-    final trimmed = url.trim();
-    if (trimmed.isEmpty) return false;
-    final uri = Uri.tryParse(trimmed);
-    if (uri == null || !uri.hasAbsolutePath) return false;
-    if (!uri.scheme.startsWith('http')) return false;
-    // Accept any URL; HLS format is validated at the player level.
-    return true;
-  }
-
-  // ── Submit handler ────────────────────────────────────────────────────────
-
   void _onLoad() {
     final url = _urlController.text.trim();
 
-    if (!_isValidUrl(url)) {
+    if (!UrlValidator.isValidUrl(url)) {
       setState(() {
         _validationError =
             'Please enter a valid URL (must start with http:// or https://)';
@@ -53,22 +40,19 @@ class _VideoActionRowState extends State<VideoActionRow> {
     setState(() => _validationError = null);
     _focusNode.unfocus();
 
-    final bloc = context.read<VideoPlayerBloc>();
-    bloc
-      ..add(AddCustomUrl(url))
-      ..add(LoadVideo(url));
+    final videoPlayerBloc = context.read<VideoPlayerBloc>();
+
+    videoPlayerBloc.add(AddCustomUrl(url));
+    videoPlayerBloc.add(LoadVideo(url));
 
     _urlController.clear();
   }
-
-  // ── Build ─────────────────────────────────────────────────────────────────
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // ── Custom URL row ───────────────────────────────────────────────
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -111,7 +95,7 @@ class _VideoActionRowState extends State<VideoActionRow> {
               ),
             ),
             AppSizses.width(AppSizses.s),
-            // Send/Load button
+            // Send Load button
             BlocBuilder<VideoPlayerBloc, VideoPlayerState>(
               builder: (context, state) {
                 final isLoading = state is VideoPlayerLoading;

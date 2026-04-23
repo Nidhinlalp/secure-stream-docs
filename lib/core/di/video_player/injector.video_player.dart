@@ -46,9 +46,7 @@ class VideoPlayerInjector {
     DI.registerLazyInstance<SaveCustomUrlUseCase>(
       () => SaveCustomUrlUseCase(DI.fetch<VideoRepository>()),
     );
-    DI.registerLazyInstance<GetCustomUrlsUseCase>(
-      () => GetCustomUrlsUseCase(DI.fetch<VideoRepository>()),
-    );
+
     DI.registerLazyInstance<DeleteCustomUrlUseCase>(
       () => DeleteCustomUrlUseCase(DI.fetch<VideoRepository>()),
     );
@@ -65,7 +63,6 @@ class VideoPlayerInjector {
         updatePlaybackPosition: DI.fetch<UpdatePlaybackPositionUseCase>(),
         clearPlaybackPosition: DI.fetch<ClearPlaybackPositionUseCase>(),
         saveCustomUrl: DI.fetch<SaveCustomUrlUseCase>(),
-        getCustomUrls: DI.fetch<GetCustomUrlsUseCase>(),
         deleteCustomUrl: DI.fetch<DeleteCustomUrlUseCase>(),
       ),
     );

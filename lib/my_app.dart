@@ -5,7 +5,6 @@ import 'package:secure_stream_docs/core/di/main/injector.dart';
 import 'package:secure_stream_docs/core/utils/constants/app_constants.dart';
 import 'package:secure_stream_docs/features/documents/presentation/logic/document/documents_bloc.dart';
 import 'package:secure_stream_docs/features/video_player/presentation/logic/bloc/video_player_bloc.dart';
-import 'package:secure_stream_docs/flavors.dart';
 
 import 'package:secure_stream_docs/core/router/app_router.dart';
 
@@ -33,7 +32,7 @@ class MyApp extends StatelessWidget {
         ],
         child: MaterialApp.router(
           debugShowCheckedModeBanner: false,
-          title: F.title,
+          title: 'Secure Stream',
           routerConfig: AppRouter.router,
         ),
       ),

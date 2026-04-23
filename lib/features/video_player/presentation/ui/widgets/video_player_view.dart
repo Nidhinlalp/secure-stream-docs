@@ -9,6 +9,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:secure_stream_docs/core/ui/themes/app_colors.dart';
 import 'package:secure_stream_docs/core/ui/themes/app_sizes.dart';
 import 'package:secure_stream_docs/core/ui/themes/app_text_theme.dart';
+import 'package:secure_stream_docs/core/utils/helpers/video_error_mapper.dart';
 import 'package:secure_stream_docs/features/video_player/domain/entities/video.dart';
 import 'package:secure_stream_docs/features/video_player/presentation/logic/bloc/video_player_bloc.dart';
 import 'video_buffering_overlay.dart';
@@ -33,12 +34,18 @@ class _VideoPlayerViewState extends State<VideoPlayerView>
   bool _isBuffering = false;
   bool _isPlaying = false;
   Timer? _debounceTimer;
+  late final VideoPlayerBloc _videoPlayerBloc;
 
   @override
   void initState() {
     super.initState();
+    _onInit();
     WidgetsBinding.instance.addObserver(this);
     _initPlayer();
+  }
+
+  void _onInit() {
+    _videoPlayerBloc = context.read<VideoPlayerBloc>();
   }
 
   @override
@@ -50,16 +57,37 @@ class _VideoPlayerViewState extends State<VideoPlayerView>
     super.dispose();
   }
 
+  // ─────────────────────────────────────────────────────────────────────────
+  // didUpdateWidget — handles URL change while the widget stays mounted.
+  //
+  // When the BLoC emits a new VideoPlayerReady with a different URL
+  // (e.g. user loads a custom stream),
+  // rebuilds this widget with a new `video` prop but does NOT call
+  // dispose → initState. Without this override the old controller
+  // would keep playing the previous stream.
+  //
+  // Flow: save current position → dispose old controller → reset local
+  //       flags → init a fresh controller for the new URL.
+  // ─────────────────────────────────────────────────────────────────────────
   @override
   void didUpdateWidget(covariant VideoPlayerView oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.video.url != widget.video.url) {
+      _forceSavePosition();
       _disposePlayer();
       _resetState();
       _initPlayer();
     }
   }
 
+  // ─────────────────────────────────────────────────────────────────────────
+  // didChangeAppLifecycleState — persists playback position when the app
+  // goes to background (paused) or loses focus (inactive).
+  //
+  // Without this, the user would lose their resume position if the OS
+  // kills the app while it's backgrounded, because the debounce timer
+  // and dispose() may never fire in that scenario.
+  // ─────────────────────────────────────────────────────────────────────────
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.paused ||
@@ -156,21 +184,20 @@ class _VideoPlayerViewState extends State<VideoPlayerView>
 
     switch (event.betterPlayerEventType) {
       case BetterPlayerEventType.bufferingStart:
-        setState(() => _isBuffering = true);
+        _setBuffering(true);
         break;
 
       case BetterPlayerEventType.bufferingEnd:
-      case BetterPlayerEventType.bufferingUpdate:
-        setState(() => _isBuffering = false);
+        _setBuffering(false);
         break;
 
       case BetterPlayerEventType.play:
-        setState(() => _isPlaying = true);
+        _setPlaying(true);
         break;
 
       case BetterPlayerEventType.pause:
       case BetterPlayerEventType.finished:
-        setState(() => _isPlaying = false);
+        _setPlaying(false);
         _forceSavePosition();
         break;
 
@@ -184,6 +211,18 @@ class _VideoPlayerViewState extends State<VideoPlayerView>
 
       default:
         break;
+    }
+  }
+
+  void _setBuffering(bool value) {
+    if (_isBuffering != value) {
+      setState(() => _isBuffering = value);
+    }
+  }
+
+  void _setPlaying(bool value) {
+    if (_isPlaying != value) {
+      setState(() => _isPlaying = value);
     }
   }
 
@@ -201,7 +240,7 @@ class _VideoPlayerViewState extends State<VideoPlayerView>
     _debounceTimer = Timer(const Duration(seconds: 5), () {
       if (!mounted) return;
 
-      context.read<VideoPlayerBloc>().add(
+      _videoPlayerBloc.add(
         SavePlaybackPosition(url: widget.video.url, positionMs: positionMs),
       );
     });
@@ -209,14 +248,14 @@ class _VideoPlayerViewState extends State<VideoPlayerView>
 
   void _forceSavePosition() {
     final controller = _controller;
-    if (!mounted || controller == null) return;
+    if (controller == null) return;
 
     final positionMs =
         controller.videoPlayerController?.value.position.inMilliseconds ?? 0;
 
     if (positionMs <= 0) return;
 
-    context.read<VideoPlayerBloc>().add(
+    _videoPlayerBloc.add(
       SavePlaybackPosition(url: widget.video.url, positionMs: positionMs),
     );
   }
@@ -235,11 +274,11 @@ class _VideoPlayerViewState extends State<VideoPlayerView>
             ),
             AppSizses.height(AppSizses.m),
             Text(
-              _friendlyPlayerError(message),
+              VideoErrorMapper.getUserFriendlyError(message),
               textAlign: TextAlign.center,
-              style: AppTextStyle.bodyMedium(context)?.copyWith(
-                color: Colors.white70,
-              ),
+              style: AppTextStyle.bodyMedium(
+                context,
+              )?.copyWith(color: Colors.white70),
             ),
             AppSizses.height(AppSizses.l),
             OutlinedButton.icon(
@@ -260,14 +299,6 @@ class _VideoPlayerViewState extends State<VideoPlayerView>
         ),
       ),
     );
-  }
-
-  String _friendlyPlayerError(String? raw) {
-    if (raw == null || raw.isEmpty) return 'Failed to load video.';
-    if (raw.contains('network') || raw.contains('connection')) {
-      return 'Network error.\nCheck your connection and retry.';
-    }
-    return 'Failed to load the stream.\nPlease retry.';
   }
 
   void _disposePlayer() {

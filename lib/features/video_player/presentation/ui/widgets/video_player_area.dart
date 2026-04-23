@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:secure_stream_docs/core/utils/constants/app_constants.dart';
+import 'package:secure_stream_docs/core/utils/helpers/video_error_mapper.dart';
 import 'package:secure_stream_docs/features/video_player/presentation/logic/bloc/video_player_bloc.dart';
-import 'package:secure_stream_docs/features/video_player/presentation/utils/video_error_mapper.dart';
 import 'package:secure_stream_docs/features/video_player/presentation/ui/widgets/video_error_widget.dart';
 import 'package:secure_stream_docs/features/video_player/presentation/ui/widgets/video_player_view.dart';
 import 'package:secure_stream_docs/features/video_player/presentation/ui/widgets/video_details_section.dart';
 import 'video_loading_placeholder.dart';
 import 'video_initial_placeholder.dart';
-import 'video_empty_details.dart';
 
 class VideoPlayerArea extends StatelessWidget {
   final VideoPlayerState state;
@@ -18,13 +17,13 @@ class VideoPlayerArea extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return switch (state) {
-      // Loading — show skeleton/loader in 16:9 container
+      // Loading
       VideoPlayerLoading() => const VideoLoadingPlaceholder(),
 
-      // Initial — empty placeholder with a subtle icon
+      // Initial
       VideoPlayerInitial() => const VideoInitialPlaceholder(),
 
-      // Error — fallback 16:9 error widget with retry
+      // Error
       VideoPlayerError(:final message) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -34,11 +33,11 @@ class VideoPlayerArea extends StatelessWidget {
               const LoadVideo(AppConstants.defaultHlsStream),
             ),
           ),
-          const VideoEmptyDetails(),
+          const VideoDetailsSection(),
         ],
       ),
 
-      // Ready — the real player + details section
+      // Ready
       VideoPlayerReady(:final video, :final positionMs) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -46,10 +45,6 @@ class VideoPlayerArea extends StatelessWidget {
           const VideoDetailsSection(),
         ],
       ),
-
-      // CustomUrlsLoaded — keep the player visible by not re-rendering it
-      // (Bloc handles URL list; we only render the player state)
-      CustomUrlsLoaded() => const VideoInitialPlaceholder(),
     };
   }
 }

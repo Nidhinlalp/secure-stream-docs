@@ -6,7 +6,6 @@ import 'package:secure_stream_docs/features/video_player/data/repositories/video
 import 'package:secure_stream_docs/features/video_player/domain/repositories/video_repository.dart';
 import 'package:secure_stream_docs/features/video_player/domain/usecases/clear_playback_position.dart';
 import 'package:secure_stream_docs/features/video_player/domain/usecases/delete_custom_url.dart';
-import 'package:secure_stream_docs/features/video_player/domain/usecases/get_custom_urls.dart';
 import 'package:secure_stream_docs/features/video_player/domain/usecases/get_last_playback_position.dart';
 import 'package:secure_stream_docs/features/video_player/domain/usecases/get_or_create_video.dart';
 import 'package:secure_stream_docs/features/video_player/domain/usecases/save_custom_url.dart';

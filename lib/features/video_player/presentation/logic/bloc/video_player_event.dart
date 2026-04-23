@@ -7,7 +7,6 @@ sealed class VideoPlayerEvent extends Equatable {
   List<Object> get props => [];
 }
 
-/// Load video (initial load or new URL)
 final class LoadVideo extends VideoPlayerEvent {
   final String url;
 
@@ -17,7 +16,6 @@ final class LoadVideo extends VideoPlayerEvent {
   List<Object> get props => [url];
 }
 
-/// Save playback position (called periodically)
 final class SavePlaybackPosition extends VideoPlayerEvent {
   final String url;
   final int positionMs;
@@ -28,7 +26,6 @@ final class SavePlaybackPosition extends VideoPlayerEvent {
   List<Object> get props => [url, positionMs];
 }
 
-/// Clear playback position (start over)
 final class ClearPlaybackPosition extends VideoPlayerEvent {
   final String url;
 
@@ -38,7 +35,6 @@ final class ClearPlaybackPosition extends VideoPlayerEvent {
   List<Object> get props => [url];
 }
 
-/// Add custom URL (from input field)
 final class AddCustomUrl extends VideoPlayerEvent {
   final String url;
 
@@ -48,15 +44,6 @@ final class AddCustomUrl extends VideoPlayerEvent {
   List<Object> get props => [url];
 }
 
-/// Load all custom URLs
-final class LoadCustomUrls extends VideoPlayerEvent {
-  const LoadCustomUrls();
-
-  @override
-  List<Object> get props => [];
-}
-
-/// Delete a custom URL
 final class DeleteCustomUrl extends VideoPlayerEvent {
   final String url;
 

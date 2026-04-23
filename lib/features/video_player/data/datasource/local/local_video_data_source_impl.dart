@@ -84,17 +84,6 @@ class LocalVideoDataSourceImpl implements LocalVideoDataSource {
     await getOrCreateVideo(url);
   }
 
-  /// Get all custom URLs
-  @override
-  Future<List<String>> getCustomUrls() async {
-    final videos = await storage.isar.videoModels
-        .filter()
-        .isUserProvidedEqualTo(true)
-        .findAll();
-
-    return videos.map((e) => e.url).toList();
-  }
-
   /// Delete custom URL
   @override
   Future<void> deleteCustomUrl(String url) async {

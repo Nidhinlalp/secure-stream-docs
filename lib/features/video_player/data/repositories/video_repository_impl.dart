@@ -11,6 +11,9 @@ class VideoRepositoryImpl implements VideoRepository {
   VideoRepositoryImpl({required LocalVideoDataSource localDataSource})
     : _localDataSource = localDataSource;
 
+  // ─────────────────────────────────────────────────────────────────────────
+  /// Get or create video entity
+  // ─────────────────────────────────────────────────────────────────────────
   @override
   EitherFailure<Video> getOrCreateVideo(String url) async {
     try {
@@ -21,6 +24,9 @@ class VideoRepositoryImpl implements VideoRepository {
     }
   }
 
+  // ─────────────────────────────────────────────────────────────────────────
+  /// Update playback position
+  // ─────────────────────────────────────────────────────────────────────────
   @override
   EitherUnit updatePlaybackPosition(String url, int positionMs) async {
     try {
@@ -31,6 +37,9 @@ class VideoRepositoryImpl implements VideoRepository {
     }
   }
 
+  // ─────────────────────────────────────────────────────────────────────────
+  /// Get last playback position
+  // ─────────────────────────────────────────────────────────────────────────
   @override
   EitherFailure<int> getLastPosition(String url) async {
     try {
@@ -41,6 +50,9 @@ class VideoRepositoryImpl implements VideoRepository {
     }
   }
 
+  // ─────────────────────────────────────────────────────────────────────────
+  /// Clear playback position
+  // ─────────────────────────────────────────────────────────────────────────
   @override
   EitherUnit clearPlaybackPosition(String url) async {
     try {
@@ -51,6 +63,9 @@ class VideoRepositoryImpl implements VideoRepository {
     }
   }
 
+  // ─────────────────────────────────────────────────────────────────────────
+  /// Save custom URL
+  // ─────────────────────────────────────────────────────────────────────────
   @override
   EitherUnit saveCustomUrl(String url) async {
     try {
@@ -61,16 +76,9 @@ class VideoRepositoryImpl implements VideoRepository {
     }
   }
 
-  @override
-  EitherList<String> getCustomUrls() async {
-    try {
-      final urls = await _localDataSource.getCustomUrls();
-      return Right(urls);
-    } catch (e) {
-      return Left(CacheFailure(e.toString()));
-    }
-  }
-
+  // ─────────────────────────────────────────────────────────────────────────
+  /// Delete custom URL
+  // ─────────────────────────────────────────────────────────────────────────
   @override
   EitherUnit deleteCustomUrl(String url) async {
     try {

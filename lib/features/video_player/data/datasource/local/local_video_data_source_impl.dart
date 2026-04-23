@@ -8,7 +8,9 @@ class LocalVideoDataSourceImpl implements LocalVideoDataSource {
 
   LocalVideoDataSourceImpl({required this.storage});
 
-  /// Get or create video
+  // ─────────────────────────────────────────────────────────────────────────
+  ///Get or create video
+  // ─────────────────────────────────────────────────────────────────────────
   @override
   Future<VideoModel> getOrCreateVideo(String url) async {
     return await storage.isar.writeTxn(() async {
@@ -31,7 +33,9 @@ class LocalVideoDataSourceImpl implements LocalVideoDataSource {
     });
   }
 
-  /// Update playback
+  // ─────────────────────────────────────────────────────────────────────────
+  /// Updating a playback position
+  // ─────────────────────────────────────────────────────────────────────────
   @override
   Future<void> updatePlaybackPosition(String url, int positionMs) async {
     await storage.isar.writeTxn(() async {
@@ -49,7 +53,9 @@ class LocalVideoDataSourceImpl implements LocalVideoDataSource {
     });
   }
 
-  /// Get last position
+  // ─────────────────────────────────────────────────────────────────────────
+  /// Getting a last playback position
+  // ─────────────────────────────────────────────────────────────────────────
   @override
   Future<int> getLastPosition(String url) async {
     final video = await storage.isar.videoModels
@@ -60,7 +66,9 @@ class LocalVideoDataSourceImpl implements LocalVideoDataSource {
     return video?.lastPositionMs ?? 0;
   }
 
-  /// Clear playback
+  // ─────────────────────────────────────────────────────────────────────────
+  /// Clearing a playback position
+  // ─────────────────────────────────────────────────────────────────────────
   @override
   Future<void> clearPlaybackPosition(String url) async {
     await storage.isar.writeTxn(() async {
@@ -78,13 +86,17 @@ class LocalVideoDataSourceImpl implements LocalVideoDataSource {
     });
   }
 
-  /// Save custom URL
+  // ─────────────────────────────────────────────────────────────────────────
+  /// Saving a video URL
+  // ─────────────────────────────────────────────────────────────────────────
   @override
   Future<void> saveCustomUrl(String url) async {
     await getOrCreateVideo(url);
   }
 
-  /// Delete custom URL
+  // ─────────────────────────────────────────────────────────────────────────
+  /// Deleting a video URL
+  // ─────────────────────────────────────────────────────────────────────────
   @override
   Future<void> deleteCustomUrl(String url) async {
     await storage.isar.writeTxn(() async {
